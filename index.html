@@ -740,8 +740,9 @@ const DATA_REFRESH_MS = 5 * 60000;
 const DAY_START_HOUR = 6;
 const DAY_END_HOUR = 18;
 
+const PROXY_URL = "https://script.google.com/macros/s/AKfycbxbasS8T0O8uKLqeQ-56VpVjZhHFgMaptx6DNX98c2fIGDCSZA97cN18F2iUwTBxPYsIw/exec";
 function gvizUrl(sheetName){
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+  return `${PROXY_URL}?sheet=${encodeURIComponent(sheetName)}`;
 }
 
 /* ============================================================
