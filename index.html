@@ -1438,8 +1438,6 @@ function buildDetailBody(site){
     html += `<div class="modal-section-title">การใช้ไฟ / รายได้</div><div class="detail-rows">`;
     html += row("ใช้เองวันนี้", fmtNum(m.dayUse,2), "kWh");
     html += row("ขายเข้าระบบวันนี้", fmtNum(m.dayGrid,2), "kWh");
-    html += row("รายได้วันนี้", fmtNum(m.dayIncome,2), "บาท");
-    html += row("รายได้สะสม", fmtNum(m.totalIncome,2), "บาท");
     html += row("ประหยัดวันนี้", fmtNum(m.savedCost,2), "บาท");
     html += `</div>`;
 
