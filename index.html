@@ -1435,7 +1435,7 @@ function buildDetailBody(site){
     html += row("กำลังการผลิตติดตั้ง", fmtNum(site.capacityKw,3), "kW");
     html += `</div>`;
 
-    html += `<div class="modal-section-title">การใช้ไฟ / รายได้</div><div class="detail-rows">`;
+    html += `<div class="modal-section-title">การใช้ไฟ</div><div class="detail-rows">`;
     html += row("ใช้เองวันนี้", fmtNum(m.dayUse,2), "kWh");
     html += row("ขายเข้าระบบวันนี้", fmtNum(m.dayGrid,2), "kWh");
     html += row("ประหยัดวันนี้", fmtNum(m.savedCost,2), "บาท");
