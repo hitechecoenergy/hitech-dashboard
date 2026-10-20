@@ -1283,7 +1283,7 @@ function buildDots(){
 function renderRibbon(){
   const ribbon = document.getElementById("ribbon");
   const track = document.getElementById("ribbonTrack");
-  const issues = allSites.map(s=>({site:s, ev:evaluate(s)})).filter(x=>x.ev.state==="fault" || x.ev.state==="issue" || x.ev.state==="partial" || x.ev.state==="warning" || x.ev.state==="offline");
+    const issues = allSites.map(s=>({site:s, ev:evaluate(s)})).filter(x=>x.ev.state==="fault" || x.ev.state==="issue" || x.ev.state==="partial" || x.ev.state==="warning");
   if(!issues.length){ ribbon.classList.remove("show"); return; }
   ribbon.classList.add("show");
   track.innerHTML = "";
