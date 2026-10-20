@@ -1527,7 +1527,7 @@ function buildDetailBody(site){
     if(ev.state === "issue" || ev.state === "fault" || ev.state === "partial" || ev.state === "warning"){
       html += `<div class="modal-section-title">สถานะที่ตรวจพบ</div><div class="alarm-card"><div class="aname">${ev.reason}</div></div>`;
     }
-    html += `<div class="heuristic-note">ℹ️ "Alert" และ "เชื่อมต่อไม่ครบ/ออฟไลน์" มาจากข้อมูลจริงของ Deye (Alert API + connectStatus รายอุปกรณ์) เท่านั้น ไม่มีการเดาสถานะจากค่ากำลังไฟอีกต่อไป<br>ℹ️ "ใช้เองวันนี้"/"ประหยัดวันนี้" คำนวณจาก (ใช้ไฟรวมวันนี้ − ซื้อไฟจากการไฟฟ้าวันนี้) x 4.5 บาท/kWh จากข้อมูล /station/history ของ Deye</div>`;
+    
 
   } else if(site.vendor === "Sigen"){
     const m = site.metrics;
@@ -1569,7 +1569,7 @@ function buildDetailBody(site){
     if(ev.state === "issue" || ev.state === "fault"){
       html += `<div class="modal-section-title">สถานะที่ตรวจพบ</div><div class="alarm-card"><div class="aname">${ev.reason}</div></div>`;
     }
-    html += `<div class="heuristic-note">ℹ️ สถานะ (ปกติ/ผิดพลาด/ออฟไลน์) มาจากข้อมูลจริงของ Sigen (ฟิลด์ status จาก /system endpoint เดียวกับที่ Sigen Cloud ใช้แสดงในหน้า System ของเว็บเขาเอง) รวมถึงสถานะการเชื่อมต่อรายอุปกรณ์จาก /devices endpoint ด้วย<br>⚠️ รายละเอียด alarm เจาะจง (เช่น ชื่อ error โค้ด สาเหตุ) ยังต้องรอเชื่อมต่อ MQTT subscription แบบ real-time ถึงจะดึงมาได้ — ยืนยันจากเอกสาร Sigen ว่า alarm data มีให้ผ่าน MQTT เท่านั้น ไม่มี REST endpoint ให้ poll<br>ℹ️ "ประหยัดวันนี้" คำนวณจากผลผลิตรวมทั้งหมด x 4.5 บาท/kWh (ไม่ได้แยกว่าใช้เองเท่าไหร่ ขายเข้าระบบเท่าไหร่ เพราะ Sigen API ไม่ได้แยกให้)</div>`;
+    
   }
   return html;
 }
