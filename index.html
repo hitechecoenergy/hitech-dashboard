@@ -1101,6 +1101,9 @@ function evaluate(site){
       const isOfflineType = site.activeAlarms.some(a => /connection|communication|network|offline|disconnect/i.test(a.name||""));
       return {state: isOfflineType ? "offline" : "fault", reason:names};
     }
+    if(site.rawStatus && site.rawStatus.trim().toLowerCase() !== "normal"){
+      return {state:"offline", reason:"Network Connection Error"};
+    }
     return {state:"ok", reason:""};
   }
 
