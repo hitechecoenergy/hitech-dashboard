@@ -818,7 +818,7 @@ async function fetchSitePhotos(){
 
 const SUPABASE_URL = "https://dltcjqskhcdhuhojqkcz.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsdGNqcXNraGNkaHVob2pxa2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTA5MjQsImV4cCI6MjEwNDA2NjkyNH0.eJhd5VVvzV3cALW7Grbcx6R9dfeoxltMwmZaD8e9uzU";
-const DEFAULT_SITE_PHOTO_URL = "https://dltcjqskhcdhuhojqkcz.supabase.co/storage/v1/object/public/site-photos/choetchai.jpg";
+const DEFAULT_SITE_PHOTO_URL = "https://dltcjqskhcdhuhojqkcz.supabase.co/storage/v1/object/public/site-photos/default.jpg";
 async function fetchDeyeDailyFromSupabase(){
   const today = new Date().toLocaleDateString("sv-SE", {timeZone:"Asia/Bangkok"});
   const url = `${SUPABASE_URL}/rest/v1/daily_readings?select=station_id,production,consumption,fed_to_grid,purchase,revenue&station_id=like.DEYE:*&reading_date=eq.${today}`;
