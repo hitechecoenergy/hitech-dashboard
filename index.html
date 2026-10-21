@@ -588,7 +588,22 @@
   @media (max-width:420px){
     main{grid-template-columns:1fr;}
   }
-  @media (min-width:1700px){ main{grid-template-columns:repeat(6,1fr);} }
+  /* Desktop / TV: one row of big cards per page (5 on wide screens).
+     Text scales with the screen so it stays readable from across the room. */
+  @media (min-width:701px){
+    .card-body{padding:clamp(12px,1vw,22px) clamp(14px,1.1vw,24px) clamp(14px,1.1vw,24px);margin-top:-22px;border-radius:22px 22px 0 0;}
+    .card-meta{margin-bottom:clamp(6px,.6vw,12px);}
+    .site-name{font-size:clamp(16px,1.35vw,28px);}
+    .stats{gap:clamp(8px,.6vw,14px);margin-top:clamp(10px,.8vw,18px);}
+    .stat{padding:clamp(10px,.8vw,18px) 6px;border-radius:clamp(12px,1vw,18px);}
+    .stat .val, .stats.stats-3 .stat .val{font-size:clamp(18px,1.6vw,34px);}
+    .stat .lbl{font-size:clamp(11px,.8vw,16px);}
+    .status-pill{font-size:clamp(11px,.8vw,16px);padding:4px 12px;}
+    .status-pill .dot{width:clamp(7px,.5vw,10px);height:clamp(7px,.5vw,10px);}
+    .updated{font-size:clamp(11px,.75vw,15px);}
+    .vendor-chip-badge{font-size:clamp(10px,.7vw,14px);padding:4px 11px;}
+    .card-alert-banner{font-size:clamp(11px,.8vw,16px);padding:clamp(7px,.6vw,12px) 14px;}
+  }
   @media (min-width:701px) and (max-width:1200px){ main{grid-template-columns:repeat(4,1fr);} }
   @media (min-width:701px) and (max-width:950px){ main{grid-template-columns:repeat(3,1fr);} }
 
@@ -736,7 +751,6 @@
    CONFIG
    ============================================================ */
 const SHEET_ID = "1zz5nbLT4SjKFHYWsrsR8TvVpGjgNuOLQHRDe_3ltNNU";
-const MIN_CARD_H = 245;   // smallest card height (photo + details) before we drop a row per page
 const ROTATE_MS = 30000;
 const STALE_SOURCE_MS = 3 * 60 * 60000;   // a source with no new rows for 3h is shown as stopped
 const DATA_REFRESH_MS = 5 * 60000;
@@ -1172,24 +1186,45 @@ function houseArt(id){
   const wall = ["#fff4e6","#fde4cc","#f3e5d6","#eaf0f4","#fbe8e2","#f1ecdc"][h % 6];
   const roof = ["#8a4b2a","#5b4636","#7a3b2f","#3f4a5a","#6b5a3a","#94512b"][(h >>> 3) % 6];
   const hill = ["#9ccc8a","#a9d18e","#8fc39a"][(h >>> 6) % 3];
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220' preserveAspectRatio='xMidYMid slice'>
-<defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='hsl(${sky},70%,62%)'/><stop offset='1' stop-color='hsl(${sky - 12},85%,88%)'/></linearGradient></defs>
-<rect width='400' height='220' fill='url(#s)'/>
-<circle cx='335' cy='46' r='20' fill='#ffd76e'/><circle cx='335' cy='46' r='32' fill='#ffd76e' opacity='.25'/>
-<path d='M0 168 Q110 146 210 162 T400 156 V220 H0Z' fill='${hill}'/>
-<rect x='62' y='128' width='8' height='34' fill='#7a5a3a'/><circle cx='66' cy='120' r='24' fill='#6fae5d'/>
-<rect x='132' y='104' width='156' height='72' fill='${wall}'/>
-<path d='M116 108 L152 60 H268 L304 108 Z' fill='${roof}'/>
-<path d='M150 101 L170 70 H250 L270 101 Z' fill='#27426e'/>
-<path d='M190 70 L176 101 M210 70 V101 M230 70 L244 101 M160 86 H260' stroke='#a9c1e2' stroke-width='1.6'/>
-<rect x='196' y='134' width='28' height='42' rx='2' fill='${roof}'/>
-<rect x='148' y='124' width='32' height='24' rx='2' fill='#d6ecff' stroke='#fff' stroke-width='2'/>
-<rect x='240' y='124' width='32' height='24' rx='2' fill='#d6ecff' stroke='#fff' stroke-width='2'/>
+  // Square canvas with the house in the middle, so it survives being cropped
+  // to a tall card (TV, one row) or a wide strip (phone).
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' preserveAspectRatio='xMidYMid slice'>
+<defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='hsl(${sky},70%,58%)'/><stop offset='.7' stop-color='hsl(${sky - 12},85%,86%)'/></linearGradient></defs>
+<rect width='400' height='400' fill='url(#s)'/>
+<circle cx='252' cy='96' r='30' fill='#ffd76e' opacity='.25'/><circle cx='252' cy='96' r='18' fill='#ffd76e'/>
+<path d='M0 255 Q100 235 200 250 T400 245 V400 H0Z' fill='${hill}'/>
+<rect x='96' y='232' width='7' height='30' fill='#7a5a3a'/><circle cx='100' cy='224' r='20' fill='#6fae5d'/>
+<rect x='138' y='192' width='124' height='74' fill='${wall}'/>
+<path d='M124 197 L156 150 H244 L276 197 Z' fill='${roof}'/>
+<path d='M154 190 L170 160 H230 L246 190 Z' fill='#27426e'/>
+<path d='M186 160 L178 190 M200 160 V190 M214 160 L222 190 M162 175 H238' stroke='#a9c1e2' stroke-width='1.4'/>
+<rect x='188' y='226' width='24' height='40' rx='2' fill='${roof}'/>
+<rect x='149' y='209' width='27' height='20' rx='2' fill='#d6ecff' stroke='#fff' stroke-width='2'/>
+<rect x='224' y='209' width='27' height='20' rx='2' fill='#d6ecff' stroke='#fff' stroke-width='2'/>
 </svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
 function cssUrl(u){ return `url("${u.replace(/["\\\n]/g, encodeURIComponent)}")`; }
+
+// Uploaded photos are ~600 KB (1706x960). Supabase Storage resizes on the fly,
+// so cards ask for a ~30 KB version and the detail view for a medium one.
+function photoVariant(url, w, h, q){
+  if(!url || !url.includes("/storage/v1/object/public/")) return url;
+  return url.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/") + `?width=${w}&height=${h}&quality=${q}`;
+}
+const cardPhoto = url => photoVariant(url, 540, 960, 70);
+const heroPhoto = url => photoVariant(url, 1000, 563, 75);
+
+// Fetch every card photo up front so rotating to the next page shows them instantly.
+let preloadedPhotos = [];
+function preloadPhotos(sites){
+  preloadedPhotos = sites.filter(s => s.photoUrl).map(s => {
+    const img = new Image();
+    img.src = cardPhoto(s.photoUrl);
+    return img;
+  });
+}
 
 /* ============================================================
    ตัดสิน "ปัญหา"
@@ -1379,7 +1414,7 @@ function buildCard(site){
     </div>
   `;
   const photo = card.querySelector(".card-photo");
-  photo.style.backgroundImage = (site.photoUrl ? cssUrl(site.photoUrl) + ", " : "") + houseArt(site.id);
+  photo.style.backgroundImage = (site.photoUrl ? cssUrl(cardPhoto(site.photoUrl)) + ", " : "") + houseArt(site.id);
   card.tabIndex = 0;
   card.setAttribute("role", "button");
   card.setAttribute("aria-label", `${site.name} — ${pill.text}${ev.reason ? " — " + ev.reason : ""}`);
@@ -1462,12 +1497,10 @@ let searchQuery = "";
 function pageSize(){
   const grid = document.getElementById("grid");
   const cs = getComputedStyle(grid);
+  // One row per page: 5 cards on wide screens, 4 or 3 on narrower ones (see the CSS breakpoints).
   const cols = cs.gridTemplateColumns.split(" ").filter(Boolean).length || 5;
-  const gap = parseFloat(cs.rowGap) || 16;
-  const h = grid.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-  const rows = h > 0 ? Math.max(1, Math.floor((h + gap) / (MIN_CARD_H + gap))) : 2;
-  grid.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
-  return cols * rows;
+  grid.style.gridTemplateRows = "minmax(0, 1fr)";
+  return cols;
 }
 
 function filteredSites(){
@@ -1854,7 +1887,8 @@ function openDetail(site){
     ${buildDetailBody(site)}
   `;
   document.querySelector("#modalContent .modal-hero").style.backgroundImage =
-    (site.photoUrl ? cssUrl(site.photoUrl) + ", " : "") + houseArt(site.id);
+    // The card-size photo is already cached, so it shows at once while the sharper one loads on top.
+    (site.photoUrl ? cssUrl(heroPhoto(site.photoUrl)) + ", " + cssUrl(cardPhoto(site.photoUrl)) + ", " : "") + houseArt(site.id);
   document.getElementById("modalOverlay").classList.add("show");
   document.getElementById("modalBox").scrollTop = 0;
   document.getElementById("modalClose").focus();
@@ -1893,6 +1927,7 @@ tickClock();
 async function refreshData(){
   try{
     allSites = await loadAllSites();
+    preloadPhotos(allSites);
     allSites.sort((a,b)=>{
       const ea = evaluate(a).state, eb = evaluate(b).state;
       const rank = s => s==="fault" ? 0 : s==="warning" ? 1 : s==="partial" ? 2 : s==="issue" ? 3 : s==="offline" ? 4 : 5;
