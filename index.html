@@ -802,6 +802,27 @@ async function fetchSheet(sheetName){
   return parseCSV(text);
 }
 
+const SUPABASE_URL = "https://dltcjqskhcdhuhojqkcz.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsdGNqcXNraGNkaHVob2pxa2N6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0OTA5MjQsImV4cCI6MjEwNDA2NjkyNH0.eJhd5VVvzV3cALW7Grbcx6R9dfeoxltMwmZaD8e9uzU";
+
+async function fetchDeyeDailyFromSupabase(){
+  const today = new Date().toLocaleDateString("sv-SE", {timeZone:"Asia/Bangkok"});
+  const url = `${SUPABASE_URL}/rest/v1/daily_readings?select=station_id,production,consumption,fed_to_grid,purchase,revenue&station_id=like.DEYE:*&reading_date=eq.${today}`;
+  const res = await fetch(url, {
+    headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${SUPABASE_ANON_KEY}` }
+  });
+  if(!res.ok) throw new Error(`โหลด Deye daily จาก Supabase ไม่สำเร็จ (${res.status})`);
+  const rows = await res.json();
+  return rows.map(r => ({
+    stationId: String(r.station_id || "").replace(/^DEYE:/, ""),
+    day_generation_kWh: r.production,
+    day_self_use_kWh: (r.consumption != null && r.purchase != null) ? (r.consumption - r.purchase) : null,
+    day_purchase_kWh: r.purchase,
+    day_grid_kWh: r.fed_to_grid,
+    saved_cost: r.revenue
+  }));
+}
+
 function num(v){
   if(v === undefined || v === null || v === "") return null;
   const n = parseFloat(v);
@@ -839,7 +860,7 @@ async function loadAllSites(){
     fetchSheet("Deye_Station_List").catch(()=>[]),
     fetchSheet("Deye_Device_Status").catch(()=>[]),
     fetchSheet("Deye_Alerts").catch(()=>[]),
-    fetchSheet("Deye_Daily_Energy").catch(()=>[]),
+    fetchDeyeDailyFromSupabase().catch(()=>[]),
     fetchSheet("Sigen_Inverter_Data"),
     fetchSheet("Sigen_Realtime_Data").catch(()=>[]),
     fetchSheet("Sigen_Station_List").catch(()=>[]),
